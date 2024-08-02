@@ -91,7 +91,7 @@ class CallKeepNotificationManager(private val context: Context) {
         }
     }
 
-    var notificationLayout: RemoteViews = RemoteViews(context.packageName, R.layout.layout_custom_notification);
+    var notificationLayout: RemoteViews = RemoteViews(context.packageName, R.layout.layout_custom_small_notification);
 
 
     fun showIncomingNotification(data: Bundle) {
@@ -118,6 +118,7 @@ class CallKeepNotificationManager(private val context: Context) {
         notificationBuilder.setTimeoutAfter(data.getLong(EXTRA_CALLKEEP_DURATION, 0L))
         notificationBuilder.setOnlyAlertOnce(true)
         notificationBuilder.setSound(null)
+        notificationBuilder .setStyle(NotificationCompat.DecoratedCustomViewStyle())
         notificationBuilder.setFullScreenIntent(
                 getActivityPendingIntent(notificationId, data), true
         )
