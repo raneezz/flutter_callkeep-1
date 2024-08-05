@@ -86,6 +86,7 @@ class IncomingCallActivity : Activity() {
     private lateinit var tvCallerName: TextView
     private lateinit var tvCallHeader: TextView
     private lateinit var ivLogo: ImageView
+    private lateinit var ivAvatar: CircleImageView
 
     private lateinit var btnAnswer: Button
 
@@ -170,7 +171,8 @@ class IncomingCallActivity : Activity() {
         if (data == null) finish()
 
         tvCallerName.text = data?.getString(EXTRA_CALLKEEP_CALLER_NAME, "")
-        tvCallHeader.text = data?.getString(EXTRA_CALLKEEP_CONTENT_TITLE, "")
+        tvCallHeader.text = data?.getString(EXTRA_CALLKEEP_HANDLE, "")
+       // tvCallHeader.text = data?.getString(EXTRA_CALLKEEP_CONTENT_TITLE, "")
 
 
         val logo = data?.getString(EXTRA_CALLKEEP_BACKGROUND_URL, "")
@@ -181,6 +183,14 @@ class IncomingCallActivity : Activity() {
             getPicassoInstance(applicationContext, headers).load(logo)
                 .into(ivLogo)
            // ivLogo.setImageResource(identifier)
+        }
+
+        val avatar = data?.getString(EXTRA_CALLKEEP_BACKGROUND_URL, "")
+        if(avatar?.isNotEmpty() == true) {
+            val headers =
+                data.getSerializable(CallKeepBroadcastReceiver.EXTRA_CALLKEEP_HEADERS) as HashMap<String, Any?>
+            getPicassoInstance(applicationContext, headers).load(avatar)
+                .into(ivAvatar)
         }
        // ivLogo.visibility = if (logo?.isNotEmpty() == true) View.VISIBLE else View.INVISIBLE
 
@@ -223,6 +233,7 @@ class IncomingCallActivity : Activity() {
 
     private fun initView() {
         llBackground = findViewById(R.id.llBackground)
+        ivAvatar = findViewById(R.id.ivAvatar)
 
         tvCallerName = findViewById(R.id.tvCallerName)
         tvCallHeader = findViewById(R.id.tvCallHeader)
