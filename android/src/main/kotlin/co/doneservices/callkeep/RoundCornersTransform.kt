@@ -1,25 +1,35 @@
 package co.doneservices.callkeep
-
-import android.graphics.*
+import android.graphics.Bitmap
+import android.graphics.BitmapShader
+import android.graphics.Canvas
+import android.graphics.Paint
+import android.graphics.Shader
 import com.squareup.picasso.Transformation
 
-class RoundCornersTransform(private val radiusInPx: Float) : Transformation {
 
+class RoundCornersTransform : Transformation {
     override fun transform(source: Bitmap): Bitmap {
-        val bitmap = Bitmap.createBitmap(source.width, source.height, source.config)
+        val size = Math.min(source.width, source.height)
+        val x = (source.width - size) / 2
+        val y = (source.height - size) / 2
+        val squaredBitmap = Bitmap.createBitmap(source, x, y, size, size)
+        if (squaredBitmap != source) {
+            source.recycle()
+        }
+        val bitmap = Bitmap.createBitmap(size, size, source.config)
         val canvas = Canvas(bitmap)
-        val paint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.DITHER_FLAG)
-        val shader = BitmapShader(source, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP)
-        paint.shader = shader
-        val rect = RectF(0.0f, 0.0f, source.width.toFloat(), source.height.toFloat())
-        canvas.drawRoundRect(rect, radiusInPx, radiusInPx, paint)
-        source.recycle()
-
+        val paint = Paint()
+        val shader =
+            BitmapShader(squaredBitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP)
+        paint.setShader(shader)
+        paint.isAntiAlias = true
+        val r = size / 2f
+        canvas.drawCircle(r, r, r, paint)
+        squaredBitmap.recycle()
         return bitmap
     }
 
     override fun key(): String {
-        return "round_corners"
+        return "circle"
     }
-
 }
