@@ -161,6 +161,10 @@ class CallKeepNotificationManager(private val context: Context) {
            // val top = context.getResources().getDrawable(R.drawable.ic_video);
             notificationLayout.setImageViewResource(R.id.acceptIcon,R.drawable.ic_video)
         }
+        else{
+            notificationLayout.setImageViewResource(R.id.acceptIcon,R.drawable.ic_accept)
+        }
+
         notificationLayout.setOnClickPendingIntent(R.id.llDecline, getDeclinePendingIntent(notificationId, data))
         notificationLayout.setOnClickPendingIntent(R.id.llAccept, getAcceptPendingIntent(notificationId, data))
         notificationLayout.setTextViewText(R.id.tvNumber,data.getString(EXTRA_CALLKEEP_HANDLE))
@@ -194,7 +198,7 @@ class CallKeepNotificationManager(private val context: Context) {
         if (avatarUrl != null && avatarUrl.isNotEmpty()) {
             val headers =
                 data.getSerializable(CallKeepBroadcastReceiver.EXTRA_CALLKEEP_HEADERS) as HashMap<String, Any?>
-            getPicassoInstance(context, headers).load(avatarUrl).transform(RoundCornersTransform(32.0f))
+            getPicassoInstance(context, headers).load(avatarUrl).transform(RoundCornersTransform())
                 .into(notificationLayout,R.id.ivAvatar,notificationId,notification)
         }
 
